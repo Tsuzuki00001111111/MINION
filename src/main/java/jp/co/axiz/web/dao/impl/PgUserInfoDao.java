@@ -8,17 +8,40 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.co.axiz.entity.UserInfo;
-import jp.co.axiz.exception.DataAccessException;
-import jp.co.axiz.util.DbUtil;
+import org.springframework.stereotype.Repository;
 
-public class PgUserInfoDao {
+import jp.co.axiz.web.dao.UserInfoDao;
+import jp.co.axiz.web.entity.UserInfo;
+import jp.co.axiz.web.exception.DataAccessException;
+import jp.co.axiz.web.util.DbUtil;
 
+
+@Repository
+public class PgUserInfoDao implements UserInfoDao {
+
+	private String SQLComm;
+
+	@Override
 	public List<UserInfo> findAll() {
+		// 変数宣言
 		ArrayList<UserInfo> list = new ArrayList<>();
 
+		// 初期化
+		SQLComm = "";
+
+		// SQL文記載
+		SQLComm += "SELECT"
+				+ " user_id,"
+				+ " user_name,"
+				+ " telephone,"
+				+ " password"
+				+ " FROM"
+				+ " user_info"
+				+ " ORDER BY"
+				+ " user_id";
+
 		try (Connection con = DbUtil.getConnection();
-				PreparedStatement stmt = con.prepareStatement("SELECT user_id, user_name, telephone, password FROM user_info ORDER BY user_id")) {
+				PreparedStatement stmt = con.prepareStatement(SQLComm)) {
 			ResultSet rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -36,9 +59,24 @@ public class PgUserInfoDao {
 		return list;
 	}
 
+	@Override
 	public List<UserInfo> find(UserInfo cond) {
+		// 変数宣言
 		ArrayList<String> whereCond = new ArrayList<>();
 		ArrayList<Object> param = new ArrayList<>();
+
+		// 初期化
+		SQLComm = "";
+
+		// SQL文記載
+		SQLComm += "SELECT"
+				+ " user_id,"
+				+ " user_name,"
+				+ " telephone,"
+				+ " password"
+				+ " FROM"
+				+ " user_info"
+				+ " WHERE ";
 
 		if (cond.getId() != null) {
 			whereCond.add("user_id = ?");
@@ -60,8 +98,13 @@ public class PgUserInfoDao {
 		String whereString = String.join(" AND ", whereCond.toArray(new String[]{}));
 		ArrayList<UserInfo> list = new ArrayList<>();
 
+		// SQL文記載
+		SQLComm += whereString;
+		SQLComm += " ORDER BY"
+				+  " user_id";
+
 		try (Connection con = DbUtil.getConnection();
-				PreparedStatement stmt = con.prepareStatement("SELECT user_id, user_name, telephone, password FROM user_info WHERE " + whereString + " ORDER BY user_id")) {
+				PreparedStatement stmt = con.prepareStatement(SQLComm)) {
 			for (int i = 0; i < param.size(); i++) {
 				// ? は 1 origin
 				stmt.setObject(i + 1, param.get(i));
@@ -84,9 +127,25 @@ public class PgUserInfoDao {
 		return list;
 	}
 
+	@Override
 	public UserInfo findById(int id) {
+
+		// 初期化
+		SQLComm = "";
+
+		// SQL文記載
+		SQLComm += "SELECT"
+				+ " user_id,"
+				+ " user_name,"
+				+ " telephone,"
+				+ " password"
+				+ " FROM"
+				+ " user_info"
+				+ " WHERE"
+				+ " user_id = ?";
+
 		try (Connection con = DbUtil.getConnection();
-				PreparedStatement stmt = con.prepareStatement("SELECT user_id, user_name, telephone, password FROM user_info WHERE user_id = ?")) {
+				PreparedStatement stmt = con.prepareStatement(SQLComm)) {
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 
@@ -105,9 +164,24 @@ public class PgUserInfoDao {
 		return null;
 	}
 
+	@Override
 	public int register(UserInfo user) {
+
+		// 初期化
+		SQLComm = "";
+
+		// SQL文記載
+		SQLComm += "INSERT"
+				+ " INTO"
+				+ " user_info"
+				+ " (user_name,"
+				+ " telephone,"
+				+ " password)"
+				+ " VALUES"
+				+ " (?, ?, ?)";
+
 		try (Connection con = DbUtil.getConnection();
-				PreparedStatement stmt = con.prepareStatement("INSERT INTO user_info (user_name, telephone, password) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+				PreparedStatement stmt = con.prepareStatement(SQLComm, Statement.RETURN_GENERATED_KEYS)) {
 			stmt.setString(1, user.getName());
 			stmt.setString(2, user.getTelephone());
 			stmt.setString(3, user.getPassword());
@@ -124,9 +198,24 @@ public class PgUserInfoDao {
 		}
 	}
 
+	@Override
 	public int update(UserInfo user) {
+
+		// 初期化
+		SQLComm = "";
+
+		// SQL文記載
+		SQLComm += "UPDATE"
+				+ " user_info"
+				+ " SET"
+				+ " user_name = ?,"
+				+ " telephone = ?,"
+				+ " password = ?"
+				+ " WHERE"
+				+ " user_id = ?";
+
 		try (Connection con = DbUtil.getConnection();
-				PreparedStatement stmt = con.prepareStatement("UPDATE user_info SET user_name = ?, telephone = ?, password = ? WHERE user_id = ?")) {
+				PreparedStatement stmt = con.prepareStatement(SQLComm)) {
 			stmt.setString(1, user.getName());
 			stmt.setString(2, user.getTelephone());
 			stmt.setString(3, user.getPassword());
@@ -138,9 +227,21 @@ public class PgUserInfoDao {
 		}
 	}
 
+	@Override
 	public int delete(int id) {
+
+		// 初期化
+		SQLComm = "";
+
+		// SQL文記載
+		SQLComm += "DELETE"
+				+ " FROM"
+				+ " user_info"
+				+ " WHERE"
+				+ " user_id = ?";
+
 		try (Connection con = DbUtil.getConnection();
-				PreparedStatement stmt = con.prepareStatement("DELETE FROM user_info WHERE user_id = ?")) {
+				PreparedStatement stmt = con.prepareStatement(SQLComm)) {
 			stmt.setInt(1, id);
 
 			return stmt.executeUpdate();

@@ -5,16 +5,38 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import jp.co.axiz.entity.Admin;
-import jp.co.axiz.exception.DataAccessException;
-import jp.co.axiz.util.DbUtil;
+import org.springframework.stereotype.Repository;
 
-public class PgAdminDao {
+import jp.co.axiz.web.dao.AdminDao;
+import jp.co.axiz.web.util.DbUtil;
 
+@Repository
+
+
+public class PgAdminDao implements AdminDao {
+
+	private String SQLComm;
+
+	@Override
 	public Admin findByIdAndPassword(String id, String password) {
+
+		// 初期化
+		SQLComm = "";
+
+		// SQL文記載
+		SQLComm += "SELECT"
+				+ " admin_id,"
+				+ " admin_name,"
+				+ " password"
+				+ " FROM"
+				+ " admin"
+				+ " WHERE"
+				+ " admin_id = ?"
+				+ " AND"
+				+ " password = ?";
+
 		try (Connection con = DbUtil.getConnection();
-				PreparedStatement stmt = con.prepareStatement(
-						"SELECT admin_id, admin_name, password FROM admin WHERE admin_id = ? AND password = ?")) {
+				PreparedStatement stmt = con.prepareStatement(SQLComm)) {
 			stmt.setString(1, id);
 			stmt.setString(2, password);
 			ResultSet rs = stmt.executeQuery();
@@ -34,3 +56,4 @@ public class PgAdminDao {
 	}
 
 }
+
