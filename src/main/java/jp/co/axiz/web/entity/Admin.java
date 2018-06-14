@@ -3,10 +3,18 @@ package jp.co.axiz.web.entity;
 import java.io.Serializable;
 
 public class Admin implements Serializable {
-
+	/*---  Field  ---*/
 	private String id;
 	private String name;
-	private String password;
+	private String password;//変数名概要
+
+	/*---  Field End  ---*/
+
+	/*---  Constructor  ---*/
+	/*---  Constructor End  ---*/
+
+	/*---  Method  ---*/
+	//  処理概要
 
 	public String getId() {
 		return id;
@@ -31,4 +39,5 @@ public class Admin implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	/*---  Method End  ---*/
 }

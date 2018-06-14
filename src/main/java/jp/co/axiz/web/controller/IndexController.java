@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class IndexController {
-	@RequestMapping(value="/index", method=RequestMethod.GET)
+//	@RequestMapping(value="/index", method=RequestMethod.GET)
+	@RequestMapping("/index")
 	public String index(Model model) {
 		return "index";
 	}
@@ -17,9 +18,11 @@ public class IndexController {
 
 		if(model != null) {
 			return "menu";
-		}else {
-			return "redirect:index";
 		}
+		return "index";
+//		else {
+//			return "redirect:index";
+//		}
 	}
 
 }

@@ -4,10 +4,20 @@ import java.io.Serializable;
 
 public class UserInfo implements Serializable {
 
+	/*---  Field  ---*/
 	private Integer id;
 	private String name;
 	private String telephone;
-	private String password;
+	private String password;  //変数名概要
+
+
+	/*---  Field End  ---*/
+
+	/*---  Constructor  ---*/
+	/*---  Constructor End  ---*/
+
+	/*---  Method  ---*/
+	//  処理概要
 
 	public Integer getId() {
 		return id;
@@ -83,5 +93,6 @@ public class UserInfo implements Serializable {
 			return false;
 		return true;
 	}
+	/*---  Method End  ---*/
 
 }

@@ -3,7 +3,7 @@ package jp.co.axiz.web.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import jp.co.axiz.exception.DataAccessException;
+import jp.co.axiz.web.exception.DataAccessException;
 
 public class DbUtil {
 	public static Connection getConnection() {

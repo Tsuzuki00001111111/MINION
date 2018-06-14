@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import org.springframework.stereotype.Repository;
 
 import jp.co.axiz.web.dao.AdminDao;
+import jp.co.axiz.web.entity.Admin;
+import jp.co.axiz.web.exception.DataAccessException;
 import jp.co.axiz.web.util.DbUtil;
 
 @Repository
